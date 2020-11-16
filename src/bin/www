@@ -7,6 +7,7 @@
 const debugLib = require('debug');
 const http = require('http');
 const mongoose = require('mongoose');
+const socketIo = require("socket.io");
 
 const app = require('../app');
 const config = require('../config/config');
@@ -47,11 +48,23 @@ app.set('port', port);
  */
 
 const server = http.createServer(app);
+const io = socketIo(server);
+io.on("connection", socket => {
+  console.log("New client connected");
+
+  //Here we listen on a new namespace called "incoming data"
+  socket.on("incoming data", (data)=>{
+      //Here we broadcast it out to all other sockets EXCLUDING the socket which sent us the data
+     socket.broadcast.emit("outgoing data", {num: data});
+  });
+
+  //A special namespace "disconnect" for when a client disconnects
+  socket.on("disconnect", () => console.log("Client disconnected"));
+});
 
 /**
  * Event listener for HTTP server "error" event.
  */
-
 function onError(error) {
   if (error.syscall !== 'listen') {
     throw error;
