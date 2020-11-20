@@ -48,9 +48,12 @@ app.set('port', port);
  */
 
 const server = http.createServer(app);
-const io = socketIo(server);
+const io = socketIo(server, { cors:true, origins: '*:*'});
+
 io.on("connection", socket => {
   console.log("New client connected");
+
+  socket.emit("hello", "Welcome to you");
 
   //Here we listen on a new namespace called "incoming data"
   socket.on("incoming data", (data)=>{
@@ -61,6 +64,8 @@ io.on("connection", socket => {
   //A special namespace "disconnect" for when a client disconnects
   socket.on("disconnect", () => console.log("Client disconnected"));
 });
+
+app.io = io;
 
 /**
  * Event listener for HTTP server "error" event.
