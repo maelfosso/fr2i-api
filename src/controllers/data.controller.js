@@ -6,7 +6,7 @@ const debug = debugLib('tracer:data-controller');
 
 const create = async (req, res) => {
   const { body } = req;
-  debug(body);
+
   body.originalId = body.id;
   delete body.id;
   
@@ -15,17 +15,32 @@ const create = async (req, res) => {
   const data = new Data({
     ...body
   });
-  debug('GOOO...');
   debug(data);
   await data.save();
   debug(`data saved : ${data}`);
+
+  req.app.io.emit('data.saved', data);
 
   res.status(201).json(data);
 } 
 
 const all = async (req, res) => {
   debug('Get all data');
-  res.status(201).json([]);
+  let success = true;
+  let data = [];
+
+  try {
+    data = await Data.find();
+  } catch (e) {
+    debug('An error occurred');
+    debug(e);
+
+    success = false;
+  }
+
+  res.status(success ? 201 : 403).json({
+    data: []
+  });
 }
 
 module.exports = {
