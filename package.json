@@ -5,7 +5,7 @@
   "scripts": {
     "start": "node ./src/bin/www",
     "watch:dev": "nodemon",
-    "dev": "PORT=4000 DEBUG=tracer:* NODE_ENV=development node ./src/bin/www",
+    "dev": "DEBUG=tracer:* NODE_ENV=development node ./src/bin/www",
     "prod": "NODE_ENV=production node ./src/bin/www"
   },
   "dependencies": {

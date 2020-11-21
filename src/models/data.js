@@ -8,14 +8,17 @@ const schema = new Schema({
   age: {
     type: Number,
   },
+  sex: {
+    type: String
+  },
   longitude: {
-    type: String,
+    type: Number,
   },
   latitude: {
-    type: String,
+    type: Number,
   },
   altitude: {
-    type: String
+    type: Number
   },
   originalId: {
     type: Number
